@@ -39,7 +39,7 @@ public class HbmRun {
             session.save(volkswagen);
 
             session.getTransaction().commit();
-            session.close();;
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
