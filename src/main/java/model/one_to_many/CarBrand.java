@@ -1,4 +1,4 @@
-package model;
+package model.one_to_many;
 
 import javax.persistence.*;
 import java.util.ArrayList;

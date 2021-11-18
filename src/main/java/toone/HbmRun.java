@@ -1,7 +1,7 @@
 package toone;
 
-import model.CarBrand;
-import model.CarModel;
+import model.one_to_many.CarBrand;
+import model.one_to_many.CarModel;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
