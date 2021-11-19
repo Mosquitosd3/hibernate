@@ -1,21 +1,26 @@
-package model.one_to_many;
+package model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "car_model")
-public class CarModel {
+@Table(name = "author")
+public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
 
-    public static CarModel of(String name) {
-        CarModel carModel = new CarModel();
-        carModel.name = name;
-        return carModel;
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Books> books = new ArrayList<>();
+
+    public static Author of(String name) {
+        Author author = new Author();
+        author.name = name;
+        return author;
     }
 
     public int getId() {
@@ -34,6 +39,14 @@ public class CarModel {
         this.name = name;
     }
 
+    public List<Books> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Books> books) {
+        this.books = books;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -42,8 +55,8 @@ public class CarModel {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        CarModel carModel = (CarModel) o;
-        return id == carModel.id;
+        Author author = (Author) o;
+        return id == author.id;
     }
 
     @Override
