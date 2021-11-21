@@ -1,15 +1,19 @@
 package toone;
 
-import model.Author;
-import model.Books;
+import model.MarkCar;
+import model.ModelCar;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HbmRun {
     public static void main(String[] args) {
+        List<MarkCar> list = new ArrayList<>();
         final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                 .configure().build();
         try {
@@ -17,29 +21,9 @@ public class HbmRun {
             Session session = sf.openSession();
             session.beginTransaction();
 
-            Books headFirstJava = Books.of("Head First Java");
-            Books thinkingJava = Books.of("Thinking Java");
-            Books coreJava = Books.of("Core Java");
-
-            Author bruceEckel = Author.of("Bruce Eckel");
-            bruceEckel.getBooks().add(headFirstJava);
-
-            Author kathySierra = Author.of("Kathy Sierra");
-            kathySierra.getBooks().add(thinkingJava);
-
-            Author bretBates = Author.of("Bret Bates");
-            bretBates.getBooks().add(thinkingJava);
-
-            Author caysHorstmann = Author.of("Cay S. Horstmann");
-            caysHorstmann.getBooks().add(coreJava);
-
-            session.persist(bruceEckel);
-            session.persist(kathySierra);
-            session.persist(bretBates);
-            session.persist(caysHorstmann);
-
-            Author author = session.get(Author.class, 1);
-            session.remove(author);
+            list = session.createQuery(
+                    "select distinct m from MarkCar m join fetch m.models"
+            ).list();
 
             session.getTransaction().commit();
             session.close();
@@ -47,6 +31,11 @@ public class HbmRun {
             e.printStackTrace();
         } finally {
             StandardServiceRegistryBuilder.destroy(registry);
+        }
+        for (MarkCar mark : list) {
+            for (ModelCar model : mark.getModels()) {
+                System.out.println(model);
+            }
         }
     }
 }
