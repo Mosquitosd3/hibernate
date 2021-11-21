@@ -72,8 +72,6 @@ public class MarkCar {
                 + ", name='"
                 + name
                 + '\''
-                + ", models="
-                + models
                 + '}';
     }
 }
