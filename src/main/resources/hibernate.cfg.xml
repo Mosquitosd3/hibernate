@@ -17,5 +17,7 @@
         <mapping class="model.ModelCar"/>
         <mapping class="model.MarkCar"/>
         <mapping class="model.Candidate"/>
+        <mapping class="model.Vacancy"/>
+        <mapping class="model.Base"/>
     </session-factory>
 </hibernate-configuration>

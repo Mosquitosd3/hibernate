@@ -16,6 +16,9 @@ public class Candidate {
 
     private int salary;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    private Base base;
+
     public static Candidate of(String name, String experience, int salary) {
         Candidate candidate = new Candidate();
         candidate.name = name;
@@ -52,8 +55,16 @@ public class Candidate {
         return salary;
     }
 
-    public void aVoid(int salary) {
+    public void setSalary(int salary) {
         this.salary = salary;
+    }
+
+    public Base getBase() {
+        return base;
+    }
+
+    public void setBase(Base base) {
+        this.base = base;
     }
 
     @Override

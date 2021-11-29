@@ -1,12 +1,14 @@
 package toone;
 
+import jdk.jshell.spi.ExecutionControl;
+import model.Base;
 import model.Candidate;
+import model.Vacancy;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.query.Query;
 
 import java.util.List;
 
@@ -20,39 +22,37 @@ public class HbmCandidateRun {
             session.beginTransaction();
 
             /*
-            Candidate one = Candidate.of("Alex", "Spring", 100);
-            Candidate two = Candidate.of("Nikolay", "Servlet", 120);
-            Candidate three = Candidate.of("Nikitaa", "Hibernate",110);
+            Vacancy junior = Vacancy.of("Java junior", "Fix bug");
+            Vacancy middle = Vacancy.of("Java middle", "Developing");
+            Vacancy senior = Vacancy.of("Java senior", "creating an architecture");
 
-            session.save(one);
-            session.save(two);
-            session.save(three);
+            session.save(junior);
+            session.save(middle);
+            session.save(senior);
+
+            Base programmer = Base.of("Programmer");
+            programmer.addVacancy(junior);
+            programmer.addVacancy(middle);
+            programmer.addVacancy(senior);
+
+            session.save(programmer);
+
+            Candidate candidate = Candidate.of("Yarik", "Java core", 100);
+            candidate.setBase(programmer);
+
+            session.save(candidate);
              */
-            for (Candidate el : (List<Candidate>) session.createQuery("from Candidate").list()) {
+
+            Candidate candidate = session.createQuery(
+                    "select distinct c from Candidate c "
+                            + " join fetch c.base b "
+                            + " join fetch b.vacancies "
+                            + " where c.id = :id", Candidate.class
+            ).setParameter("id", 4).uniqueResult();
+
+            for (Vacancy el : candidate.getBase().getVacancies()) {
                 System.out.println(el);
             }
-            System.out.println(session.createQuery("from Candidate c where c.id = 1")
-                    .uniqueResult());
-
-            Query queryName = session.createQuery("from Candidate c where c.name = :name")
-                    .setParameter("name", "Nikolay");
-            System.out.println(queryName.uniqueResult());
-
-            Query update = session.createQuery(
-                    "update Candidate s set s.name = :name,"
-                            + " s.experience = :experience, s.salary = :salary "
-                            + "where s.id = :id"
-            );
-            update.setParameter("name", "Misha");
-            update.setParameter("experience", "Java core");
-            update.setParameter("salary", 150);
-            update.setParameter("id", 3);
-            update.executeUpdate();
-
-            Query delete = session.createQuery("delete from Candidate where id = :id")
-                    .setParameter("id", 1);
-            delete.executeUpdate();
-
             session.getTransaction().commit();
             session.close();
         } catch (Exception e) {
